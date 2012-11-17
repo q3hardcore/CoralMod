@@ -56,7 +56,10 @@ public class mod_coral extends BaseMod {
 	public static Block Coral5;
 
 	// Is running on client side?
-	public static boolean clientSide;
+	private static boolean clientSide;
+
+	// Have we already checked side?
+	private static boolean sideChecked = false;
 
 	// Do ID's need setting?
 	private static boolean setIDs = true;
@@ -68,16 +71,24 @@ public class mod_coral extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.4.3";
+		return "1.4.4";
 	}
 
 	@Override
 	public void load() {
-		checkSide();
+		checkClientSide();
 		loadSettings();
 
 		// Don't use sprites if serverside
 		if(clientSide) {
+			Sprite_coral1 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral1.png");
+			Sprite_coral2 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral2.png");
+			Sprite_coral3 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral3.png");
+			Sprite_coral4 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral4.png");
+			Sprite_coral5 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral5.png");
+			Sprite_coral6 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral6.png");
+			Sprite_coralr1 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_reef.png");
+			Sprite_coralr2 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_reef2.png");
 			Coral1 = (new BlockCoral(corale1, 1, Sprite_coral1, Sprite_coral2, Sprite_coral3, Sprite_coral4, Sprite_coral5, Sprite_coral6)).setHardness(0.2F).setStepSound(Block.soundStoneFootstep).setBlockName("Coral1");
 			Coral2 = (new BlockCoral2(corale2, Sprite_coralr1)).setHardness(0.5F).setStepSound(Block.soundStoneFootstep).setBlockName("Coral2");
 			Coral3 = (new BlockCoral2(corale3, Sprite_coralr2)).setHardness(0.5F).setStepSound(Block.soundStoneFootstep).setBlockName("Coral3");
@@ -162,32 +173,6 @@ public class mod_coral extends BaseMod {
 		ModLoader.addRecipe(new ItemStack(dye, 1, 6), new Object[]{"B", Character.valueOf('B'), new ItemStack(Coral5, 1, 5)});
 	}
 
-	private void checkSide() {
-		try {
-			try {
-				Class.forName("aub");
-			} catch (ClassNotFoundException cnfe) {
-				Class.forName("net.minecraft.src.GuiScreen");
-			}
-			modDir = new File(Minecraft.getMinecraftDir(), "mods/coralreef/");
-			clientSide = true;
-		} catch (Exception e) {
-			modDir = new File(".", "mods/coralreef/");
-			clientSide = false;
-		}
-
-		if(clientSide) {
-			Sprite_coral1 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral1.png");
-			Sprite_coral2 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral2.png");
-			Sprite_coral3 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral3.png");
-			Sprite_coral4 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral4.png");
-			Sprite_coral5 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral5.png");
-			Sprite_coral6 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_coral6.png");
-			Sprite_coralr1 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_reef.png");
-			Sprite_coralr2 = ModLoader.addOverride("/terrain.png", "/nandonalt/CoralMod/block_reef2.png");
-		}
-	}
-
 	private void loadSettings() {
 		try {
 			if(!modDir.exists()) {
@@ -209,6 +194,29 @@ public class mod_coral extends BaseMod {
 		} catch (Exception e) {
 			System.out.println("Could not load settings.");
 		}
+	}
+
+	/**
+	 * Used to determine if Coral Reef is running on client side
+	 */
+	public static boolean checkClientSide() {
+		if(sideChecked)
+			return clientSide;
+
+		try {
+			try {
+				Class.forName("net.minecraft.src.GuiScreen");
+			} catch (ClassNotFoundException cnfe) {
+				Class.forName("aue");
+			}
+			modDir = new File(Minecraft.getMinecraftDir(), "mods/coralreef/");
+			clientSide = true;
+		} catch (Exception e) {
+			modDir = new File(".", "mods/coralreef/");
+			clientSide = false;
+		}
+		sideChecked = true;
+		return clientSide;
 	}
 
 	/**

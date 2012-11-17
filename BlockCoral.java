@@ -12,11 +12,6 @@ public class BlockCoral extends Block {
 	public int sprite6;
 	public int type;
 
-	/* UNUSED
-	public int ia;
-	public int id;
-	*/
-
 	public BlockCoral(int blockID, int type, int sprite1, int sprite2, int sprite3, int sprite4, int sprite5, int sprite6) {
 		super(blockID, Material.water);
 		blockIndexInTexture = sprite1;

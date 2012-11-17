@@ -19,7 +19,7 @@ public class mod_CoralReefGUI extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.4.3";
+		return "1.4.4";
 	}
 
 	@SideOnly(CLIENT)
@@ -33,7 +33,7 @@ public class mod_CoralReefGUI extends BaseMod {
 	
 	@Override
 	public void load() {
-		if(!mod_coral.clientSide) {
+		if(!mod_coral.checkClientSide()) {
 			System.out.println(getName() + " disabled.");
 			return;
 		}
