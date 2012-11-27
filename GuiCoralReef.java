@@ -6,7 +6,7 @@ import cpw.mods.fml.common.asm.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiCoralReef extends GuiScreen
 {
-	private static final String[] DESCRIPTIONS = new String[] {"CoralReef Gen.", "Spiky Coral", "Bubbles", "Growing", "Average Size", "Ocean Only"};
+	private static final String[] DESCRIPTIONS = new String[] {"CoralReef Gen.", "Spiky Coral", "Bubbles", "Growing", "Average Size", "Ocean Only", "ModLoader mode", "Place on land"};
 	private static final String[] STATES = new String[] {"OFF", "ON"};
 	private static final String[] SIZES = new String[] {"Small", "Normal", "Big"};
 
@@ -44,6 +44,10 @@ public class GuiCoralReef extends GuiScreen
 				return btnDescription + ": " + getSize(mod_coral.size);
 			case 5:
 				return btnDescription + ": " + getState(mod_coral.ocean);
+			case 6:
+				return btnDescription + ": " + getState(mod_coral.classic);
+			case 7:
+				return btnDescription + ": " + getState(mod_coral.land);
 			default:
 				return "Unknown";
 		}
@@ -70,24 +74,35 @@ public class GuiCoralReef extends GuiScreen
 		switch (par1GuiButton.id)
 		{
 			case 0:
-				mod_coral.enable = !mod_coral.enable;
+				mod_coral.enable ^= true;
 				break;
 			case 1:
-				mod_coral.spiky = !mod_coral.spiky;
+				mod_coral.spiky ^= true;
 				break;
 			case 2:
-				mod_coral.bubble = !mod_coral.bubble;
+				mod_coral.bubble ^= true;
 				break;
 			case 3:
-				mod_coral.grow = !mod_coral.grow;
+				mod_coral.grow ^= true;
 				break;
 			case 4:
 				mod_coral.size = (mod_coral.size + 1) % 3;
 				break;
 			case 5:
-				mod_coral.ocean = !mod_coral.ocean;
+				mod_coral.ocean ^= true;
 				break;
 			case 6:
+				if(!mod_coral.checkHasForge() || !mod_coral.checkEnoughSlots()) {
+					return;
+				}
+
+				mod_coral.classic ^= true;
+				mod_coral.toggleOverrides(true);
+				break;
+			case 7:
+				mod_coral.land ^= true;
+				break;
+			case 8:
 				if(inGame()) {
 					mc.displayGuiScreen((GuiScreen)null);
 					mc.setIngameFocus();
@@ -114,12 +129,17 @@ public class GuiCoralReef extends GuiScreen
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		drawDefaultBackground();
+		String status = mod_coral.checkHasForge()?"(Forge)":"(ModLoader)";
 
-		if(!mc.isSingleplayer()) { // find better check
-			drawCenteredString(fontRenderer, "CoralReef Mod (disabled)", width / 2, 20, 16777215);
-		} else {
-			drawCenteredString(fontRenderer, "CoralReef Mod", width / 2, 20, 16777215);
+		if(!mod_coral.checkSettingsLoaded()) {
+			status = "(temporary settings)";
+		} else if(!inGame()) {
+			status = "(Options)";
+		} else if(!mc.isSingleplayer()) {
+			status = "(disabled)";
 		}
+
+		drawCenteredString(fontRenderer, "CoralReef Mod " + status, width / 2, 20, 16777215);
 
 		super.drawScreen(par1, par2, par3);
 	}

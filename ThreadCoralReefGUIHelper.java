@@ -12,7 +12,7 @@ public class ThreadCoralReefGUIHelper extends Thread
 	/** A reference to the Minecraft object. */
 	final Minecraft mc;
 
-	private boolean listening = true;
+	private static boolean listening = true;
 
 	public ThreadCoralReefGUIHelper(Minecraft par1Minecraft, String par2Str) {
 		super(par2Str);

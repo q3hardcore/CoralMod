@@ -1,11 +1,10 @@
 package net.minecraft.src;
 
+import cpw.mods.fml.common.asm.SideOnly;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 
 import static cpw.mods.fml.common.Side.CLIENT;
-
-import cpw.mods.fml.common.asm.SideOnly;
 
 public class mod_CoralReefGUI extends BaseMod {
 	
@@ -19,7 +18,7 @@ public class mod_CoralReefGUI extends BaseMod {
 
 	@Override
 	public String getVersion() {
-		return "1.4.4";
+		return mod_coral.getMinecraftVersion();
 	}
 
 	@SideOnly(CLIENT)
@@ -42,6 +41,7 @@ public class mod_CoralReefGUI extends BaseMod {
 		ModLoader.registerKey(this, openKey, false);
 	}
 
+	@SideOnly(CLIENT)
 	private void startCoralThread() {
 		Thread thread = new ThreadCoralReefGUIHelper(Minecraft.getMinecraft(), "Coral Reef GUI Helper Thread");
 		thread.setDaemon(true);
